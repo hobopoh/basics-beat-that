@@ -9,6 +9,10 @@ var gameMode = "start"
 var player1Rolls = [];
 var player2Rolls = [];
 var player1Choice = undefined;
+var player2Choice = undefined;
+var gamesPlayed = 0;
+var player1Wins = 0;
+var player2Wins = 0;
 
 var rollDice = function (){
   return Math.floor(Math.random()*6)+1
@@ -42,11 +46,21 @@ var getPlayer2Choice = function(input){
   } 
 } 
 
-var main = function (input) {
+var restartGame = function (){
+  gameMode = "start";
+  player1Rolls = getPlayerRolls();
+  player2Rolls = getPlayerRolls();
+  player1Choice = undefined;
+  player2Choice = undefined;
   
+}
+
+var main = function (input) {
+
+
 if (gameMode=='start'){
   gameMode= 'player1rolls';
-  return(` Hello Player 1, please cilck roll to start the game.`)
+  return(` Hello Player 1, please click roll to start the game.`)
 
 }else if (gameMode == `player1rolls`){    
     console.log("player1Rolls-start", player1Rolls)
@@ -71,20 +85,36 @@ if (gameMode=='start'){
     `Player 2, you have rolled ${player2Rolls[0]} for Dice 1 and ${player2Rolls[1]} for Dice 2.
     <br> Please choose Dice 1 or Dice 2 as the first numeral of the combined number.`)
 } else if (gameMode==`player2Choice`) {   
+  
   console.log("player2input", player2Rolls)
   if(input != 1 && input != 2){
   return `Please key the correct dice numbers - 1 or 2. `
   
   } else 
-  gameMode = "start"
   var player2Choice = getPlayer2Choice(input);
+  gamesPlayed +=1;
+  gameMode = "restart";
+
   if (player1Choice>player2Choice){
+    player1Wins+=1
+
     return (`Player 1, your number is ${player1Choice}. Player 2, your number is ${player2Choice}.
     <br> Player 1 has won!
-    <br><br>Please click roll to restart game.`)
+    <br><br> Games played: ${gamesPlayed}
+    <br> Player 1 wins: ${player1Wins}
+    <br> Player 2 wins: ${player2Wins}
+    <br><br>`)
+    
   }else 
+  player2Wins+=1;
   return (`Player 1, your number is ${player1Choice}. Player 2, your number is ${player2Choice}.
   <br> Player 2 has won!
-  <br><br>Please click roll to restart game.`)
-} 
+  <br><br> Games played: ${gamesPlayed}
+  <br> Player 1 wins: ${player1Wins}
+  <br> Player 2 wins: ${player2Wins}
+  <br><br>`)
+} else if (gameMode=="restart")
+  restartGame()
+  return (`Game has ended. Click roll to restart.`)
+
 } 
